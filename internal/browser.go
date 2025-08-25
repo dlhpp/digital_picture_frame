@@ -52,8 +52,10 @@ import (
 	"runtime"
 )
 
-func openBrowser(url string) error {
-	log.Println("openBrowser: entering")
+func openBrowser(flags *FlagSettings) error {
+	log.Println("openBrowser: entering, flags.Url = " + flags.Url)
+	url := "http://" + flags.Url
+	log.Println("openBrowser: url = " + url)
 	var cmd string
 	var args []string
 
@@ -85,19 +87,16 @@ func openBrowser(url string) error {
 		cmd = "chromium"
 		// args = []string{"--start-fullscreen", url} // For Chrome
 		// args = []string{"--kiosk", url} // For Chrome
+		args = []string{url} // For Chrome
 	}
 
 	log.Println("openBrowser: cmd = ", cmd, ", args = ", args)
 	return exec.Command(cmd, args...).Start()
 }
 
-func LaunchDefaultBrowser() {
-	log.Println("LaunchDefaultBrowser: entering")
-	err := openBrowser("http://localhost:81")
-	// err := openBrowser("https://www.youtube.com/watch?v=ML_MyBtPh8A&t=322s")
-	// err := openBrowser("https://www.youtube.com/watch?v=3NUp_RJ9JL0")
-	// err := openBrowser("http://rpi2a:82/images/car.png")
-	// err := openBrowser("https://example.com")
+func LaunchDefaultBrowser(flags *FlagSettings) {
+	log.Println("LaunchDefaultBrowser: entering, flags.Url = " + flags.Url)
+	err := openBrowser(flags)
 	if err != nil {
 		panic(err)
 	}

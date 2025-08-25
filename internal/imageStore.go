@@ -2,12 +2,20 @@ package internal
 
 import (
 	"log/slog"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-func GetImageStore() *ImageStore {
+func ShuffleImages(store *ImageStore) {
+	// rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(store.Images), func(i, j int) {
+		store.Images[i], store.Images[j] = store.Images[j], store.Images[i]
+	})
+}
+
+func GetImageStore(flags *FlagSettings) *ImageStore {
 	// Initialize image store
 	dataDir := "./data" // Change to your data directory path
 	images, err := scanImages(dataDir)
@@ -19,6 +27,12 @@ func GetImageStore() *ImageStore {
 	// DLH:  We never said "new ImageStore" - we just created a pointer to an ImageStore struct.
 	// DLH:  I just realized, we're actually creating the ImageStore struct here with the curly braces.
 	store := &ImageStore{Images: images, ImageSubscript: 0}
+
+	if flags.Random {
+		ShuffleImages(store)
+		slog.Info("getImageStore: Shuffled images for random display.")
+	}
+
 	return store
 }
 

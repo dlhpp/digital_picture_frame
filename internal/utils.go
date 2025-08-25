@@ -5,8 +5,6 @@ import (
 	"strconv"
 )
 
-// NOTHING HERE IS CURRENTLY USED BUT MAY BE USEFUL LATER
-
 func GetCurrentFuncNameLineNumber() string {
 
 	/*

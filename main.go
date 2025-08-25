@@ -10,19 +10,25 @@ import (
 func main() {
 	internal.SetupLogging()
 
-	slog.Info("main: Begin ")
+	commandLineFlags := internal.SetupCommandLineArgs()
 
-	internal.LaunchDefaultBrowser()
+	slog.Info("main: commandLineFlags", "commandLineFlags", commandLineFlags)
 
-	store := internal.GetImageStore()
+	store := internal.GetImageStore(commandLineFlags)
 
 	internal.SetupHttpHandlers(store)
 
-	host := "localhost:81"
+	internal.LaunchDefaultBrowser(commandLineFlags)
+
+	// host := "localhost:81"
+	// slog.Info("main: listening:", "host", host)
+	// if err := http.ListenAndServe(host, nil); err != nil {
+	// 	panic("main: Server failed to start: " + err.Error())
+	// }
+
+	host := commandLineFlags.Url
 	slog.Info("main: listening:", "host", host)
 	if err := http.ListenAndServe(host, nil); err != nil {
 		panic("main: Server failed to start: " + err.Error())
 	}
-
-	slog.Info("main: Program has quit and we'll never reach this point.")
 }
