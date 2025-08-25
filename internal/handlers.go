@@ -1,0 +1,61 @@
+package internal
+
+import (
+	"html/template"
+	"log/slog"
+	"net/http"
+)
+
+func SetupHttpHandlers(store *ImageStore) {
+	// Set up HTTP handlers
+	slog.Info("setupHttpHandlers: Setting up HTTP handlers")
+	http.HandleFunc("/", store.indexHandler)         // TODO: DLH - I do not really understand how this works.
+	http.HandleFunc("/next", store.nextImageHandler) // TODO: This seems identical to object oriented - these are methods on the store object/data.
+}
+
+// indexHandler serves the HTML template
+// DLH:  This is a method on the ImageStore struct.  Seems identical to object oriented programming.
+func (store *ImageStore) indexHandler(w http.ResponseWriter, r *http.Request) {
+	// Load and parse the template file
+
+	slog.Info("indexHandler: entering")
+	tmpl, err := template.ParseFiles("templates/index.html")
+	if err != nil {
+		http.Error(w, "Error loading template", http.StatusInternalServerError)
+		return
+	}
+
+	// Data for template (optional substitutions)
+	data := struct {
+		Title string
+	}{
+		Title: "Utopia Image Gallery",
+	}
+
+	// Execute template
+	if err := tmpl.Execute(w, data); err != nil {
+		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+	}
+}
+
+// nextImageHandler serves a random image
+// DLH:  This is a method on the ImageStore struct.  Seems identical to object oriented programming.
+func (store *ImageStore) nextImageHandler(w http.ResponseWriter, r *http.Request) {
+	if len(store.Images) == 0 {
+		http.Error(w, "No images found", http.StatusNotFound)
+		return
+	}
+
+	// Select a random image
+	// rand.Seed(time.Now().UnixNano())
+	// imagePath := store.Images[rand.Intn(len(store.Images))]
+	imagePath := store.Images[store.ImageSubscript]
+	slog.Info("nextImageHandler:", "subscript", store.ImageSubscript, "imagePath", imagePath)
+	store.ImageSubscript++
+	if store.ImageSubscript >= len(store.Images) {
+		store.ImageSubscript = 0
+	}
+
+	// Serve the image file
+	http.ServeFile(w, r, imagePath)
+}
