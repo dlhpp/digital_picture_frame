@@ -1,9 +1,10 @@
 package main
 
 import (
-	"dlh/slideshow/internal"
 	"log/slog"
 	"net/http"
+
+	"github.com/dlhpp/digital_picture_frame/internal"
 )
 
 func main() {
