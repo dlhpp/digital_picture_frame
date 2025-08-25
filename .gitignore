@@ -3,9 +3,6 @@
 .env.local
 .env.production
 
-# dlh images
-*.jpg
-*.png
 experiments/
 
 # Go build artifacts
