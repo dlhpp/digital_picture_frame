@@ -7,8 +7,8 @@ type ImageStore struct {
 }
 
 type FlagSettings struct {
-	Browser    bool
 	Fullscreen bool
+	Screensize string
 	Random     bool
 	Url        string
 }

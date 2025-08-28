@@ -47,47 +47,56 @@ Testing:
 */
 
 import (
+	"fmt"
 	"log"
 	"os/exec"
 	"runtime"
 )
 
 func openBrowser(flags *FlagSettings) error {
-	log.Println("openBrowser: entering, flags.Url = " + flags.Url)
+	log.Println("openBrowser: entering, flags = " + fmt.Sprintf("%+v", flags))
 	url := "http://" + flags.Url
-	log.Println("openBrowser: url = " + url)
 	var cmd string
 	var args []string
-
 	log.Println("openBrowser: runtime.GOOS = " + runtime.GOOS)
 
+	// Fullscreen Options: --start-fullscreen (Chrome), --kiosk (Chrome, Firefox)")
 	switch runtime.GOOS {
 	case "windows":
-		// Windows: Use 'start' with browser-specific flags
-		// Note: 'start' doesn't directly support full-screen, but we can try launching a specific browser
-		cmd = "cmd"
-		args = []string{"/c", "start", "chrome", url} // For Chrome
-		// args = []string{"/c", "start", "chrome", "--start-fullscreen", url} // For Chrome
-		// args = []string{"/c", "start", "chrome", "--kiosk", url} // works well - hard to close or escape.
-
 		// For Edge: args = []string{"/c", "start", "msedge", "--start-fullscreen", url}
 		// For Firefox: args = []string{"/c", "start", "firefox", "-kiosk", url}
+
+		cmd = "cmd"
+		if flags.Fullscreen {
+			args = []string{"/c", "start", "chrome", flags.Screensize, url}
+		} else {
+			args = []string{"/c", "start", "chrome", url}
+		}
+
 	case "darwin": // macOS
 		// macOS: Use 'open' with browser-specific flags
-		cmd = "open"
-		args = []string{"-a", "Google Chrome", "--args", "--start-fullscreen", url} // For Chrome
 		// For Safari: args = []string{"-a", "Safari", url} // Safari doesn't support full-screen flag directly
 		// For Firefox: args = []string{"-a", "Firefox", "--args", "-kiosk", url}
+
+		cmd = "open"
+		if flags.Fullscreen {
+			args = []string{"-a", "Google Chrome", "--args", "--start-fullscreen", url} // For Chrome
+		} else {
+			args = []string{"-a", "Google Chrome", "--args", url}
+		}
+
 	default: // Linux, BSD, etc.
 		// Linux: Use 'xdg-open' or specific browser with flags
 		// cmd = "google-chrome"
-		// args = []string{"--start-fullscreen", url} // For Chrome
 		// For Firefox: cmd = "firefox"; args = []string{"-kiosk", url}
 
 		cmd = "chromium"
-		// args = []string{"--start-fullscreen", url} // For Chrome
-		// args = []string{"--kiosk", url} // For Chrome
-		args = []string{url} // For Chrome
+		if flags.Fullscreen {
+			args = []string{flags.Screensize, url} // For Chrome
+		} else {
+			args = []string{url}
+		}
+
 	}
 
 	log.Println("openBrowser: cmd = ", cmd, ", args = ", args)

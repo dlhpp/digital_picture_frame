@@ -6,16 +6,16 @@ import (
 
 func SetupCommandLineArgs() *FlagSettings {
 
-	browser := flag.Bool("browser", true, "auto-open default web browser")
-	fullscreen := flag.Bool("fullscreen", false, "If automatically opening a browser window, open it in fullscreen mode")
+	fullscreen := flag.Bool("fullscreen", false, "Open browser in fullscreen mode")
+	screensize := flag.String("screensize", "--start-fullscreen", "Command for opening fullscreen.  Options: --start-fullscreen (Chrome), --kiosk (Chrome, Firefox)")
 	random := flag.Bool("random", true, "Randomize the order of images")
-	url := flag.String("url", "localhost:81", "Randomize the order of images")
+	url := flag.String("url", "localhost:81", "URL for the initial container page.  This page defines '/next' as the link to get images.")
 
 	flag.Parse()
 
 	return &FlagSettings{
-		Browser:    *browser,
 		Fullscreen: *fullscreen,
+		Screensize: *screensize,
 		Random:     *random,
 		Url:        *url,
 	}
