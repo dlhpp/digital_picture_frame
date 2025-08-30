@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define your binary name
-BINARY_NAME="digital_picture_frame"
+BINARY_NAME="exe.digital_picture_frame"
 
 # List of platforms (OS/ARCH pairs)
 PLATFORMS=("linux/amd64"  "linux/arm64"  "linux/arm/7"  "linux/arm/6"  "windows/amd64")
@@ -16,9 +16,25 @@ for platform in "${PLATFORMS[@]}"; do
     if [ "$arch" = "arm" ]; then
         output="${output}v${goarm}"
         GOOS=$os GOARCH=$arch GOARM=$goarm go build -o "$output" .
-        echo "Built for ${os}/${arch}/v${goarm}"
+        echo "#1 Built for ${os}/${arch}/v${goarm}"
     else
         GOOS=$os GOARCH=$arch go build -o "$output" .
-        echo "Built for ${os}/${arch}"
+        echo "#2 Built for ${os}/${arch}"
     fi
 done
+
+# Output example:
+# -----------------------------
+#2 Built for linux/amd64
+#2 Built for linux/arm64
+#1 Built for linux/arm/v7
+#1 Built for linux/arm/v6
+#2 Built for windows/amd64
+
+# Output files:
+# -----------------
+# exe.digital_picture_frame_linux_amd64
+# exe.digital_picture_frame_linux_arm64
+# exe.digital_picture_frame_linux_armv6
+# exe.digital_picture_frame_linux_armv7
+# exe.digital_picture_frame_windows_amd64.exe

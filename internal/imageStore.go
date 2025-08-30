@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"log/slog"
+	"fmt"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -22,7 +22,8 @@ func GetImageStore(flags *FlagSettings) *ImageStore {
 	if err != nil {
 		panic("getImageStore: Failed to scan images: " + err.Error())
 	}
-	slog.Info("getImageStore:", "len(images)", len(images))
+	// slog.Info("getImageStore:", "len(images)", len(images))
+	DLHLog("GetImageStore", 5, fmt.Sprintf("len(images) = %d", len(images)))
 
 	// DLH:  We never said "new ImageStore" - we just created a pointer to an ImageStore struct.
 	// DLH:  I just realized, we're actually creating the ImageStore struct here with the curly braces.
@@ -30,7 +31,7 @@ func GetImageStore(flags *FlagSettings) *ImageStore {
 
 	if flags.Random {
 		ShuffleImages(store)
-		slog.Info("getImageStore: Shuffled images for random display.")
+		DLHLog("GetImageStore", 5, "Shuffled images for random display.")
 	}
 
 	return store

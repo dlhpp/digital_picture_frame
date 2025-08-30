@@ -11,10 +11,7 @@ experiments/
 *.dll
 *.so
 *.dylib
-digital_picture_frame_linux_amd64
-digital_picture_frame_linux_arm64
-digital_picture_frame_linux_armv6
-digital_picture_frame_linux_armv7
+exe.*
 
 # Test binary, built with `go test -c`
 *.test

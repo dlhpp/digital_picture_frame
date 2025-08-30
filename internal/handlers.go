@@ -2,13 +2,12 @@ package internal
 
 import (
 	"html/template"
-	"log/slog"
 	"net/http"
 )
 
 func SetupHttpHandlers(store *ImageStore) {
 	// Set up HTTP handlers
-	slog.Info("setupHttpHandlers: Setting up HTTP handlers")
+	DLHLog("SetupHttpHandlers", 5, "Setting up HTTP handlers")
 	http.HandleFunc("/", store.indexHandler)         // TODO: DLH - I do not really understand how this works.
 	http.HandleFunc("/next", store.nextImageHandler) // TODO: This seems identical to object oriented - these are methods on the store object/data.
 }
@@ -18,7 +17,7 @@ func SetupHttpHandlers(store *ImageStore) {
 func (store *ImageStore) indexHandler(w http.ResponseWriter, r *http.Request) {
 	// Load and parse the template file
 
-	slog.Info("indexHandler: entering")
+	DLHLog("indexHandler", 5, "entering - will return main parent HTML page")
 	tmpl, err := template.ParseFiles("templates/index.html")
 	if err != nil {
 		http.Error(w, "Error loading template", http.StatusInternalServerError)
@@ -50,7 +49,7 @@ func (store *ImageStore) nextImageHandler(w http.ResponseWriter, r *http.Request
 	// rand.Seed(time.Now().UnixNano())
 	// imagePath := store.Images[rand.Intn(len(store.Images))]
 	imagePath := store.Images[store.ImageSubscript]
-	slog.Info("nextImageHandler:", "subscript", store.ImageSubscript, "imagePath", imagePath)
+	DLHLog("nextImageHandler", 3, "subscript", store.ImageSubscript, "imagePath", imagePath)
 	store.ImageSubscript++
 	if store.ImageSubscript >= len(store.Images) {
 		store.ImageSubscript = 0

@@ -48,17 +48,21 @@ Testing:
 
 import (
 	"fmt"
-	"log"
 	"os/exec"
 	"runtime"
 )
 
 func openBrowser(flags *FlagSettings) error {
-	log.Println("openBrowser: entering, flags = " + fmt.Sprintf("%+v", flags))
+	DLHLog("openBrowser", 5, "entering, flags = "+fmt.Sprintf("%+v", flags))
 	url := "http://" + flags.Url
 	var cmd string
+	var kiosk string = ""
 	var args []string
-	log.Println("openBrowser: runtime.GOOS = " + runtime.GOOS)
+	DLHLog("openBrowser", 5, "runtime.GOOS = "+runtime.GOOS)
+
+	if flags.Kiosk {
+		kiosk = "--kiosk"
+	}
 
 	// Fullscreen Options: --start-fullscreen (Chrome), --kiosk (Chrome, Firefox)")
 	switch runtime.GOOS {
@@ -67,11 +71,7 @@ func openBrowser(flags *FlagSettings) error {
 		// For Firefox: args = []string{"/c", "start", "firefox", "-kiosk", url}
 
 		cmd = "cmd"
-		if flags.Fullscreen {
-			args = []string{"/c", "start", "chrome", flags.Screensize, url}
-		} else {
-			args = []string{"/c", "start", "chrome", url}
-		}
+		args = []string{"/c", "start", "chrome", kiosk, url}
 
 	case "darwin": // macOS
 		// macOS: Use 'open' with browser-specific flags
@@ -79,11 +79,7 @@ func openBrowser(flags *FlagSettings) error {
 		// For Firefox: args = []string{"-a", "Firefox", "--args", "-kiosk", url}
 
 		cmd = "open"
-		if flags.Fullscreen {
-			args = []string{"-a", "Google Chrome", "--args", "--start-fullscreen", url} // For Chrome
-		} else {
-			args = []string{"-a", "Google Chrome", "--args", url}
-		}
+		args = []string{"-a", "Google Chrome", "--args", kiosk, url} // For Chrome
 
 	default: // Linux, BSD, etc.
 		// Linux: Use 'xdg-open' or specific browser with flags
@@ -91,20 +87,15 @@ func openBrowser(flags *FlagSettings) error {
 		// For Firefox: cmd = "firefox"; args = []string{"-kiosk", url}
 
 		cmd = "chromium"
-		if flags.Fullscreen {
-			args = []string{flags.Screensize, url} // For Chrome
-		} else {
-			args = []string{url}
-		}
-
+		args = []string{kiosk, url} // For Chrome
 	}
 
-	log.Println("openBrowser: cmd = ", cmd, ", args = ", args)
+	DLHLog("openBrowser", 5, fmt.Sprintf("cmd = %s, args = %s", cmd, args))
 	return exec.Command(cmd, args...).Start()
 }
 
 func LaunchDefaultBrowser(flags *FlagSettings) {
-	log.Println("LaunchDefaultBrowser: entering, flags.Url = " + flags.Url)
+	DLHLog("LaunchDefaultBrowser", 5, "entering, flags.Url = "+flags.Url)
 	err := openBrowser(flags)
 	if err != nil {
 		panic(err)

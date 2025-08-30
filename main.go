@@ -1,18 +1,19 @@
 package main
 
 import (
-	"log/slog"
+	"fmt"
 	"net/http"
 
 	"github.com/dlhpp/digital_picture_frame/internal"
 )
 
 func main() {
-	internal.SetupLogging()
+
+	internal.DLHLogSetLevel(1)
 
 	commandLineFlags := internal.SetupCommandLineArgs()
 
-	slog.Info("main: commandLineFlags", "commandLineFlags", commandLineFlags)
+	internal.DLHLog("main", 5, fmt.Sprintf("commandLineFlags = %+v", commandLineFlags))
 
 	store := internal.GetImageStore(commandLineFlags)
 
@@ -20,14 +21,8 @@ func main() {
 
 	internal.LaunchDefaultBrowser(commandLineFlags)
 
-	// host := "localhost:81"
-	// slog.Info("main: listening:", "host", host)
-	// if err := http.ListenAndServe(host, nil); err != nil {
-	// 	panic("main: Server failed to start: " + err.Error())
-	// }
-
 	host := commandLineFlags.Url
-	slog.Info("main: listening:", "host", host)
+	internal.DLHLog("main: listening:", 5, "host", host)
 	if err := http.ListenAndServe(host, nil); err != nil {
 		panic("main: Server failed to start: " + err.Error())
 	}
