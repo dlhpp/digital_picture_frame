@@ -50,15 +50,17 @@ import (
 	"fmt"
 	"os/exec"
 	"runtime"
+
+	"github.com/dlhpp/digital_picture_frame/logging"
 )
 
 func openBrowser(flags *FlagSettings) error {
-	DLHLog("openBrowser", 5, "entering, flags = "+fmt.Sprintf("%+v", flags))
+	logging.Log("openBrowser", 5, "entering, flags = "+fmt.Sprintf("%+v", flags))
 	url := "http://" + flags.Url
 	var cmd string
 	var kiosk string = ""
 	var args []string
-	DLHLog("openBrowser", 5, "runtime.GOOS = "+runtime.GOOS)
+	logging.Log("openBrowser", 5, "runtime.GOOS = "+runtime.GOOS)
 
 	if flags.Kiosk {
 		kiosk = "--kiosk"
@@ -90,12 +92,12 @@ func openBrowser(flags *FlagSettings) error {
 		args = []string{kiosk, url} // For Chrome
 	}
 
-	DLHLog("openBrowser", 5, fmt.Sprintf("cmd = %s, args = %s", cmd, args))
+	logging.Log("openBrowser", 5, fmt.Sprintf("cmd = %s, args = %s", cmd, args))
 	return exec.Command(cmd, args...).Start()
 }
 
 func LaunchDefaultBrowser(flags *FlagSettings) {
-	DLHLog("LaunchDefaultBrowser", 5, "entering, flags.Url = "+flags.Url)
+	logging.Log("LaunchDefaultBrowser", 5, "entering, flags.Url = "+flags.Url)
 	err := openBrowser(flags)
 	if err != nil {
 		panic(err)

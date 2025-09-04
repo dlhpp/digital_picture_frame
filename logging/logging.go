@@ -1,4 +1,4 @@
-package internal
+package logging
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 
 var GlobalLevel int = 5 // 1 ==> most verbose, 9 ==> least verbose
 
-func DLHLog(method string, level int, args ...any) {
+func Log(method string, level int, args ...any) {
 
 	if level < GlobalLevel {
 		return
@@ -26,11 +26,11 @@ func DLHLog(method string, level int, args ...any) {
 	log.Printf("%s: %+v", method, concatenatedArgs)
 }
 
-func DLHLogSetLevel(l int) {
+func SetLevel(l int) {
 	GlobalLevel = l
 }
 
-func DLHLogGetLevel(l int) int {
+func GetLevel(l int) int {
 	return GlobalLevel
 }
 

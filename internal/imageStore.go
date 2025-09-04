@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/dlhpp/digital_picture_frame/logging"
 )
 
 func ShuffleImages(store *ImageStore) {
@@ -15,7 +17,7 @@ func ShuffleImages(store *ImageStore) {
 	})
 }
 
-func GetImageStore(flags *FlagSettings) *ImageStore {
+func GetImageStore(yamlConfig *map[string]any, flags *FlagSettings) *ImageStore {
 	// Initialize image store
 	dataDir := "./data" // Change to your data directory path
 	images, err := scanImages(dataDir)
@@ -23,7 +25,7 @@ func GetImageStore(flags *FlagSettings) *ImageStore {
 		panic("getImageStore: Failed to scan images: " + err.Error())
 	}
 	// slog.Info("getImageStore:", "len(images)", len(images))
-	DLHLog("GetImageStore", 5, fmt.Sprintf("len(images) = %d", len(images)))
+	logging.Log("GetImageStore", 5, fmt.Sprintf("len(images) = %d", len(images)))
 
 	// DLH:  We never said "new ImageStore" - we just created a pointer to an ImageStore struct.
 	// DLH:  I just realized, we're actually creating the ImageStore struct here with the curly braces.
@@ -31,7 +33,7 @@ func GetImageStore(flags *FlagSettings) *ImageStore {
 
 	if flags.Random {
 		ShuffleImages(store)
-		DLHLog("GetImageStore", 5, "Shuffled images for random display.")
+		logging.Log("GetImageStore", 5, "Shuffled images for random display.")
 	}
 
 	return store

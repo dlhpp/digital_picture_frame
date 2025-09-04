@@ -5,24 +5,28 @@ import (
 	"net/http"
 
 	"github.com/dlhpp/digital_picture_frame/internal"
+	"github.com/dlhpp/digital_picture_frame/logging"
+	"github.com/dlhpp/digital_picture_frame/yaml"
 )
 
 func main() {
 
-	internal.DLHLogSetLevel(1)
+	logging.SetLevel(3)
 
 	commandLineFlags := internal.SetupCommandLineArgs()
 
-	internal.DLHLog("main", 5, fmt.Sprintf("commandLineFlags = %+v", commandLineFlags))
+	yamlConfig := yaml.OpenYamlFile("yamlConfigComplex.yaml")
 
-	store := internal.GetImageStore(commandLineFlags)
+	logging.Log("main", 5, fmt.Sprintf("commandLineFlags = %+v", commandLineFlags))
+
+	store := internal.GetImageStore(yamlConfig, commandLineFlags)
 
 	internal.SetupHttpHandlers(store)
 
 	internal.LaunchDefaultBrowser(commandLineFlags)
 
 	host := commandLineFlags.Url
-	internal.DLHLog("main: listening:", 5, "host", host)
+	logging.Log("main: listening:", 5, "host", host)
 	if err := http.ListenAndServe(host, nil); err != nil {
 		panic("main: Server failed to start: " + err.Error())
 	}

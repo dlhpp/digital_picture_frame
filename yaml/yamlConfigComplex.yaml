@@ -1,0 +1,30 @@
+user:
+  address:
+    city: Metropolis
+    country: Fictionland
+
+database:
+  host: localhost 
+  port: 5432
+logging:
+  level: DEBUG
+  file: app.log  
+multiple:
+  - item1
+  - item2
+  - item3 
+nested_numbers:  
+  multiple:
+    - 5
+    - 7
+    - 11 
+number: 42
+multiple_types:
+  string: "a string"
+  int: 100
+  float: 99.99
+  bool: true
+deeply:
+  nested:
+    structure:
+      key: Some nested string
