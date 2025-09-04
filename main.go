@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	logging.SetLevel(3)
+	logging.SetLevel(3) // TODO: should get this from command line args
 
 	commandLineFlags := internal.SetupCommandLineArgs()
 

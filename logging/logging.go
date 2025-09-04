@@ -7,6 +7,7 @@ import (
 
 var GlobalLevel int = 5 // 1 ==> most verbose, 9 ==> least verbose
 
+// TODO: refactor to return the formatted msg to enable easy testing.
 func Log(method string, level int, args ...any) {
 
 	if level < GlobalLevel {
@@ -21,9 +22,8 @@ func Log(method string, level int, args ...any) {
 		concatenatedArgs += fmt.Sprintf("%+v", singleArg)
 	}
 
-	// later i'll implement ability for different output formats
-	// along with named logging levels.
-	log.Printf("%s: %+v", method, concatenatedArgs)
+	// later i'll implement ability for different output formats and named logging levels (enums).
+	log.Printf("%s[%02d/%02d]: %+v", method, level, GlobalLevel, concatenatedArgs)
 }
 
 func SetLevel(l int) {

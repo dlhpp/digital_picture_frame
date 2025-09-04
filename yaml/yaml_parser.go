@@ -12,81 +12,97 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func GetString(obj interface{}, path string, defaultValue string) string {
+/* =====================================================================================
+
+DLH 2025-09-04
+
+This file uses a golang implementation of Lodash's
+awesome _.get() function: https://lodash.com/docs/4.17.15#get
+to generically enable loading and using YAML config files with zero setup.
+
+With this approach, for any new project or yaml file I can immediately start
+using it without have to setup structs etc.
+
+Another huge advantage is that we don't need to know the structure of the
+YAML file in advance.  The paths to get the desired values could be read
+dynamically from a database or environment variables or command line flags.
+
+In addition, this same file could be used on generic JSON structures as well.
+
+===================================================================================== */
+
+func GetString(obj any, path string, defaultValue string) string {
 	value := Get(obj, path, defaultValue)
 	str, ok := value.(string)
-	if ok && len(strings.TrimSpace(str)) > 0 {
-		return str
-	}
-	return defaultValue
-}
 
-func GetStringArray(obj interface{}, path string, defaultValue []string) []string {
-	value := Get(obj, path, defaultValue)
-	// logging.Log("GetStringArray", 9, utils.DescribeVariable("value", value))
-	// strArray, ok := value.([]string)
-	// if ok {
-	// 	return strArray
-	// }
-	// return defaultValue
-	val, ok := value.([]interface{})
 	if !ok {
+		logging.Log("GetString", 99, "NOT OK", "path", path, "value", value, utils.DescribeVariable("value", value))
 		return defaultValue
 	}
-	return utils.ConvertToSliceStrings(val)
+
+	if len(strings.TrimSpace(str)) < 1 {
+		logging.Log("GetString", 99, "EMPTY RESULT STRING", "path", path, "value", value, utils.DescribeVariable("value", value))
+		return defaultValue
+	}
+
+	return str
 }
 
-func GetInt(obj interface{}, path string, defaultValue int) int {
+func GetStringArray(obj any, path string, defaultValue []string) []string {
+	value := Get(obj, path, defaultValue)
+	val, ok := value.([]any)
+	if !ok {
+		logging.Log("GetStringArray", 99, "NOT OK", "path", path, "value", value, utils.DescribeVariable("value", value))
+		return defaultValue
+	}
+	result := utils.ConvertToSliceStrings(val)
+	return result
+}
+
+func GetInt(obj any, path string, defaultValue int) int {
 	value := Get(obj, path, defaultValue)
 	val, ok := value.(int)
-	if ok {
-		return val
+	if !ok {
+		logging.Log("GetInt", 99, "NOT OK", "path", path, "value", value, utils.DescribeVariable("value", value))
+		return defaultValue
 	}
-	return defaultValue
+	return val
 }
 
-func GetIntArray(obj interface{}, path string, defaultValue []int) []int {
+func GetIntArray(obj any, path string, defaultValue []int) []int {
 	value := Get(obj, path, defaultValue)
-	// logging.Log("GetIntArray", 1, utils.DescribeVariable("value", value))
-	// val, ok := value.([]int)
-	// logging.Log("GetIntArray", 1, "ok", ok, utils.DescribeVariable("val", val))
-	// if ok {
-	// 	return val
-	// }
-	// return defaultValue
-
-	val, ok := value.([]interface{})
+	val, ok := value.([]any)
 	if !ok {
+		logging.Log("GetIntArray", 99, "NOT OK", "path", path, "value", value, utils.DescribeVariable("value", value))
 		return defaultValue
 	}
 	return utils.ConvertToSliceInt(val)
 }
 
-func GetFloat(obj interface{}, path string, defaultValue float64) float64 {
+func GetFloat(obj any, path string, defaultValue float64) float64 {
 	value := Get(obj, path, defaultValue)
 	val, ok := value.(float64)
-	if ok {
-		return val
+	if !ok {
+		logging.Log("GetFloat", 99, "NOT OK", "path", path, "value", value, utils.DescribeVariable("value", value))
+		return defaultValue
 	}
-	return defaultValue
+	return val
 }
 
-func GetFloatArray(obj interface{}, path string, defaultValue []float64) []float64 {
+func GetFloatArray(obj any, path string, defaultValue []float64) []float64 {
 	value := Get(obj, path, defaultValue)
-	// val, ok := value.([]float64)
-	// if ok {
-	// 	return val
-	// }
-	// return defaultValue
-	val, ok := value.([]interface{})
+	val, ok := value.([]any)
 	if !ok {
+		logging.Log("GetFloatArray", 99, "NOT OK", "path", path, "value", value, utils.DescribeVariable("value", value))
 		return defaultValue
 	}
 	return utils.ConvertToSliceFloat(val)
 }
 
-func Get(obj interface{}, path string, defaultValue interface{}) interface{} {
+// This implements Lodash's awesome _.get() function: https://lodash.com/docs/4.17.15#get
+func Get(obj any, path string, defaultValue any) any {
 	if obj == nil || path == "" {
+		logging.Log("Get", 99, "INPUT IS EMPTY", "path", path, utils.DescribeVariable("obj", obj))
 		return defaultValue
 	}
 
@@ -105,7 +121,7 @@ func Get(obj interface{}, path string, defaultValue interface{}) interface{} {
 }
 
 // getValueByKey retrieves a value from the current object using a single key
-func getValueByKey(obj interface{}, key string) interface{} {
+func getValueByKey(obj any, key string) any {
 	if obj == nil {
 		return nil
 	}
@@ -127,6 +143,12 @@ func getValueByKey(obj interface{}, key string) interface{} {
 		if !mapValue.IsValid() {
 			return nil
 		}
+		// What does .Interface() do here?
+		// Converts back to a standard Go type:
+		// Reflection allows you to inspect types and values generically.
+		// Interface() reverses this process, returning the actual
+		// underlying Go value (e.g., a string, int, or custom struct)
+		// that the reflect.Value is holding.
 		return mapValue.Interface()
 
 	case reflect.Slice, reflect.Array:
@@ -160,7 +182,7 @@ func OpenYamlFile(filePath string) *map[string]any {
 	}
 	defer yamlFile.Close()
 
-	var cfg map[string]interface{}
+	var cfg map[string]any
 
 	decoder := yaml.NewDecoder(yamlFile)
 	if err = decoder.Decode(&cfg); err != nil {

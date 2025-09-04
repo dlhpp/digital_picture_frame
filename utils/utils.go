@@ -17,7 +17,8 @@ func DescribeVariable(name string, i any) string {
 	return fmt.Sprintf("(name=%s, reflectName=%s, kind=%s, type=%T, value=%+v)", name, r.Name(), r.Kind(), i, i)
 }
 
-func ConvertToSliceStrings(interfaceSlice []interface{}) []string {
+// TODO: This might be an appropriate place to try generics because these three functions are so similar.
+func ConvertToSliceStrings(interfaceSlice []any) []string {
 	// Our slice of interfaces is expected to contain strings
 	// TODO: I should check that reflect.TypeOf(interfaceSlice).Kind() == reflect.Slice first
 
@@ -38,7 +39,7 @@ func ConvertToSliceStrings(interfaceSlice []interface{}) []string {
 	return stringSlice
 }
 
-func ConvertToSliceInt(interfaceSlice []interface{}) []int {
+func ConvertToSliceInt(interfaceSlice []any) []int {
 	// Our slice of interfaces is expected to contain int
 	// TODO: I should check that reflect.TypeOf(interfaceSlice).Kind() == reflect.Slice first
 
@@ -59,7 +60,7 @@ func ConvertToSliceInt(interfaceSlice []interface{}) []int {
 	return intSlice
 }
 
-func ConvertToSliceFloat(interfaceSlice []interface{}) []float64 {
+func ConvertToSliceFloat(interfaceSlice []any) []float64 {
 	// Our slice of interfaces is expected to contain int
 	// TODO: I should check that reflect.TypeOf(interfaceSlice).Kind() == reflect.Slice first
 
@@ -79,24 +80,3 @@ func ConvertToSliceFloat(interfaceSlice []interface{}) []float64 {
 
 	return floatSlice
 }
-
-// func ConvertToMap(interfaceSlice interface{}) []float64 {
-// 	// Our slice of interfaces is expected to contain int
-// 	// TODO: I should check that reflect.TypeOf(interfaceSlice).Kind() == reflect.Slice first
-
-// 	floatSlice := make([]float64, len(interfaceSlice))
-
-// 	// Iterate through the interface slice and perform type assertion on each element
-// 	for i, v := range interfaceSlice {
-// 		s, ok := v.(float64)
-// 		if !ok {
-// 			// Handle the case where an element is not a string (e.g., panic, return error)
-// 			panic(fmt.Sprintf("ConvertToSliceFloat: Not a float64 at i=%d, %s \n", i, DescribeVariable("v", v)))
-// 		}
-// 		floatSlice[i] = s
-// 	}
-
-// 	logging.Log("ConvertToSliceFloat", 2, DescribeVariable("floatSlice", floatSlice))
-
-// 	return floatSlice
-// }

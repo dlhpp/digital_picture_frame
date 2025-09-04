@@ -14,8 +14,8 @@ func Test_Get_various_flavors(t *testing.T) {
 	testCases := []struct {
 		resultType    int // 1=>string, 2=>int, 3=>map, 4=>intArray, 5=>stringArray
 		path          string
-		expectedValue interface{}
-		defaultValue  interface{}
+		expectedValue any
+		defaultValue  any
 	}{
 		// ----------------------- string -----------------------
 		{1, "user.address.city", "Metropolis", "--not found--"},
@@ -51,7 +51,7 @@ func Test_Get_various_flavors(t *testing.T) {
 	for idx, tc := range testCases {
 		t.Run(fmt.Sprintf("%03d", idx), func(t *testing.T) {
 
-			var expected, got interface{}
+			var expected, got any
 
 			expected = tc.expectedValue
 
