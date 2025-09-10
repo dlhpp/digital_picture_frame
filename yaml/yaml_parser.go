@@ -16,7 +16,7 @@ import (
 
 DLH 2025-09-04
 
-This file uses a golang implementation of Lodash's
+This file is a golang implementation of Lodash's
 awesome _.get() function: https://lodash.com/docs/4.17.15#get
 to generically enable loading and using YAML config files with zero setup.
 
@@ -174,7 +174,7 @@ func getValueByKey(obj any, key string) any {
 
 func OpenYamlFile(filePath string) *map[string]any {
 
-	logging.Log("OpenYamlFile", 5, fmt.Sprintf("file: %s", filePath))
+	logging.Log("OpenYamlFile", 9, fmt.Sprintf("file: %s", filePath))
 
 	yamlFile, err := os.Open(filePath)
 	if err != nil {
@@ -188,6 +188,8 @@ func OpenYamlFile(filePath string) *map[string]any {
 	if err = decoder.Decode(&cfg); err != nil {
 		panic(fmt.Errorf("OpenYamlFile: error unmarshaling YAML: %w", err))
 	}
+
+	logging.Log("OpenYamlFile", 3, utils.DescribeVariable("cfg", cfg))
 
 	return &cfg
 }

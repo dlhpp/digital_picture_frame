@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/dlhpp/digital_picture_frame/internal"
@@ -11,23 +10,27 @@ import (
 
 func main() {
 
-	logging.SetLevel(3) // TODO: should get this from command line args
+	logging.SetLevel(3) // set to 1 for verbose, 5 for normal, 9 for very quiet
 
-	commandLineFlags := internal.SetupCommandLineArgs()
+	commandLineFlags := internal.GetCommandLineArgs()
 
-	yamlConfig := yaml.OpenYamlFile("yamlConfigComplex.yaml")
-
-	logging.Log("main", 5, fmt.Sprintf("commandLineFlags = %+v", commandLineFlags))
+	yamlConfig := yaml.OpenYamlFile("config.yaml")
 
 	store := internal.GetImageStore(yamlConfig, commandLineFlags)
 
 	internal.SetupHttpHandlers(store)
 
-	internal.LaunchDefaultBrowser(commandLineFlags)
+	logging.Log("main: launch set to: ", 5, commandLineFlags.Launch)
+	if commandLineFlags.Launch {
+		// internal.LaunchDefaultBrowser(yamlConfig)
+		// internal.LaunchBrowser(yamlConfig)
+		// internal.LaunchBrowser02(yamlConfig)
+		// internal.LaunchBrowser03(yamlConfig)
+	}
 
-	host := commandLineFlags.Url
-	logging.Log("main: listening:", 5, "host", host)
-	if err := http.ListenAndServe(host, nil); err != nil {
+	url := yaml.GetString(yamlConfig, "url", "localhost:81")
+	logging.Log("main: listening:", 5, "url", url)
+	if err := http.ListenAndServe(url, nil); err != nil {
 		panic("main: Server failed to start: " + err.Error())
 	}
 }

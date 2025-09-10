@@ -89,3 +89,83 @@ func Test_Get_various_flavors(t *testing.T) {
 	}
 
 }
+
+func L(n string, v any) string {
+	return fmt.Sprintf("%s = %+v", n, v)
+}
+
+func Test_BrowserConfig(t *testing.T) {
+
+	logging.SetLevel(5)
+	cfg := OpenYamlFile("config_browser.yaml")
+	logging.Log("Test_BrowserConfig", 3, L("cfg", cfg))
+
+	testCases := []struct {
+		resultType    int // 1=>string, 2=>int, 3=>map, 4=>intArray, 5=>stringArray
+		path          string
+		expectedValue any
+		defaultValue  any
+	}{
+		// ----------------------- "executable" string -----------------------
+		{1, "windows.chrome.executable", "cmd", "--not found--"},
+		{1, "windows.firefox.executable", "cmd", "--not found--"},
+
+		{1, "linux.chromium.executable", "chromium-browser", "--not found--"},
+		{1, "linux.firefox.executable", "firefox", "--not found--"},
+		{1, "linux.epiphany.executable", "epiphany", "--not found--"},
+		{1, "linux.midori.executable", "midori", "--not found--"},
+
+		{1, "darwin.firefox.executable", "firefox", "--not found--"},
+		{1, "darwin.safari.executable", "open", "--not found--"},
+
+		// ----------------------- "args" []string -----------------------
+		{5, "windows.chrome.args", []string{"/c", "start", "chrome", "--new-window", "--full-screen"}, []string{"--not found--"}},
+		{5, "windows.firefox.args", []string{"/c", "start", "firefox", "--new-window", "--full-screen"}, []string{"--not found--"}},
+
+		{5, "linux.chromium.args", []string{"--new-window", "--full-screen"}, []string{"--not found--"}},
+		{5, "linux.firefox.args", []string{"--new-window", "--full-screen"}, []string{"--not found--"}},
+		{5, "linux.epiphany.args", []string{"--new-window", "--fullscreen"}, []string{"--not found--"}},
+		{5, "linux.midori.args", []string{"--fullscreen"}, []string{"--not found--"}},
+
+		{5, "darwin.firefox.args", []string{"--new-window", "--full-screen"}, []string{"--not found--"}},
+		{5, "darwin.safari.args", []string{"-a", "Safari"}, []string{"--not found--"}},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("%03d", idx), func(t *testing.T) {
+
+			var expected, got any
+
+			expected = tc.expectedValue
+
+			// 1=>string, 2=>int, 3=>map, 4=>intArray, 5=>stringArray
+			switch tc.resultType {
+			case 1: // string
+				got = GetString(cfg, tc.path, tc.defaultValue.(string))
+
+			case 2: // int
+				got = GetInt(cfg, tc.path, tc.defaultValue.(int))
+
+			case 3: // map
+				got = Get(cfg, tc.path, tc.defaultValue.(map[string]any))
+				logging.Log("Test_BrowserConfig", 3, utils.DescribeVariable("got", got))
+
+			case 4: // intArray
+				// got = Get(cfg, tc.path, tc.defaultValue.([]int))
+				got = GetIntArray(cfg, tc.path, tc.defaultValue.([]int))
+				logging.Log("Test_BrowserConfig", 3, utils.DescribeVariable("got", got))
+
+			case 5: // stringArray
+				got = GetStringArray(cfg, tc.path, tc.defaultValue.([]string))
+				logging.Log("Test_BrowserConfig", 3, utils.DescribeVariable("got", got))
+
+			default:
+				t.Errorf("path=%s, unknown resultType=%d \n", tc.path, tc.resultType)
+				return
+			}
+
+			assert := assert.New(t)
+			assert.Equal(expected, got, L("path", tc.path))
+		})
+	}
+}

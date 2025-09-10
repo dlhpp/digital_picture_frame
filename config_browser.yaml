@@ -1,0 +1,59 @@
+windows: 
+  chrome: 
+    executable: cmd
+    args:     
+      - /c
+      - start
+      - chrome  
+      - --new-window
+      - --full-screen      
+      # - --kiosk           # Chrome supports kiosk mode
+  firefox: 
+    executable: cmd
+    args:       
+      - /c
+      - start
+      - firefox
+      - --new-window
+      - --full-screen       # Firefox uses --full-screen
+linux: 
+  chromium: 
+    executable: chromium-browser
+    args:       
+      - --new-window
+      - --full-screen       # Chromium supports kiosk mode
+      # - --kiosk
+  firefox: 
+    executable: firefox
+    args:       
+      - --new-window
+      - --full-screen       # Firefox uses --full-screen
+  epiphany: 
+    executable: epiphany
+    args:       
+      - --new-window
+      - --fullscreen        # Epiphany uses --fullscreen
+  midori: 
+    executable: midori
+    args:       
+      - --fullscreen        # Midori uses --fullscreen
+darwin: 
+  firefox: 
+    executable: firefox
+    args:       
+      - --new-window
+      - --full-screen
+  safari: 
+    executable: open
+    args:       
+      - -a
+      - Safari              # Use 'open' for Safari
+    MacScript: |
+      tell application Safari
+          activate
+          set URL of document 1 to %s
+          tell application System Events
+              keystroke t using {command down} -- New tab
+              keystroke f using {command down, control down} -- Full-screen
+          end tell
+      end tell

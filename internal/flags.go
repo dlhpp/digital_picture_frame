@@ -2,19 +2,27 @@ package internal
 
 import (
 	"flag"
+
+	"github.com/dlhpp/digital_picture_frame/logging"
+	"github.com/dlhpp/digital_picture_frame/utils"
 )
 
-func SetupCommandLineArgs() *FlagSettings {
+func GetCommandLineArgs() *FlagSettings {
 
-	kiosk := flag.Bool("kiosk", false, "Open browser in kiosk mode")
+	browser := flag.String("browser", "chrome", "Required when launch=true.  Options: default, chrome, firefox, epiphany, midori, safari.")
+	launch := flag.Bool("launch", true, "Automatically launch browser.  If false then manually open browser to http://localhost:81")
 	random := flag.Bool("random", true, "Randomize the order of images")
-	url := flag.String("url", "localhost:81", "URL for the initial container page.  This page defines '/next' as the link to get images.")
 
 	flag.Parse()
 
-	return &FlagSettings{
-		Kiosk:  *kiosk,
-		Random: *random,
-		Url:    *url,
+	result := &FlagSettings{
+		Browser: *browser,
+		Launch:  *launch,
+		Random:  *random,
+		Rest:    flag.Args(),
 	}
+
+	logging.Log("GetCommandLineArgs", 3, utils.DescribeVariable("result", result))
+
+	return result
 }

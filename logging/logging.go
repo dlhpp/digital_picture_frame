@@ -23,7 +23,7 @@ func Log(method string, level int, args ...any) {
 	}
 
 	// later i'll implement ability for different output formats and named logging levels (enums).
-	log.Printf("%s[%02d/%02d]: %+v", method, level, GlobalLevel, concatenatedArgs)
+	log.Printf("[%02d/%02d] %s: %+v", level, GlobalLevel, method, concatenatedArgs)
 }
 
 func SetLevel(l int) {

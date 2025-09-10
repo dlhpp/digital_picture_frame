@@ -7,7 +7,8 @@ type ImageStore struct {
 }
 
 type FlagSettings struct {
-	Kiosk  bool
-	Random bool
-	Url    string
+	Browser string
+	Launch  bool
+	Random  bool
+	Rest    []string
 }

@@ -1,0 +1,11 @@
+
+url: localhost:81       # hose:port
+
+random: false           # set to tru to show pictures in random order
+
+picture-directories:    # folder locations to search for pictures
+  - ./pics/01
+  - ./pics/02
+  # - C:\dlh\images\beauty\Sydney_Sweeney
+  # - C:\common\pics
+

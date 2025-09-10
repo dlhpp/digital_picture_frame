@@ -1,8 +1,7 @@
 #!/bin/bash
 
-BINARY_NAME="exe02.digital_picture_frame"
+BINARY_NAME="exe.digital_picture_frame"
 PLATFORMS=("linux/amd64"  "linux/arm64"  "linux/arm/7"  "linux/arm/6"  "windows/amd64")
-
 
 GOOS=windows GOARCH=amd64         go build -o "${BINARY_NAME}_windows_amd64" .
 GOOS=linux   GOARCH=amd64         go build -o "${BINARY_NAME}_linux_amd64" .
