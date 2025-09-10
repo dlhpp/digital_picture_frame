@@ -15,7 +15,6 @@ func SetupHttpHandlers(store *ImageStore) {
 }
 
 // indexHandler serves the HTML template
-// DLH:  This is a method on the ImageStore struct.  Seems identical to object oriented programming.
 func (store *ImageStore) indexHandler(w http.ResponseWriter, r *http.Request) {
 	// Load and parse the template file
 
@@ -28,9 +27,13 @@ func (store *ImageStore) indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Data for template (optional substitutions)
 	data := struct {
-		Title string
+		Title    string
+		Fadetime int
+		Holdtime int
 	}{
-		Title: "Utopia Image Gallery",
+		Title:    store.Title,
+		Fadetime: store.Fadetime,
+		Holdtime: store.Holdtime,
 	}
 
 	// Execute template

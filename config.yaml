@@ -1,13 +1,19 @@
 
 loglevel: 5             # 1 => most verbose, 9 => fatal errors only
 
-host: localhost:81      # host:port
+host: localhost:81      # host:port.  Do not include "http://"
 
-browser: firefox         # Required when launch=true.  Options: default, chrome, firefox, epiphany, midori, safari.
+browser: chrome         # Options: default, chrome, firefox, epiphany, midori, safari.  Required when launch=true.  
 
-launch: false            # Automatically launch browser.  If false then manually open browser to http://localhost:81"
+launch: true            # Options:  true, false.  Automatically launch browser.  If false then manually open browser to http://localhost:81"
+
+title: DLH Slideshow v1 # tile for the browser window
 
 random: true            # Randomize the order of images.
+
+fadetime: 3             # Time in seconds to transition from one picture to the next
+
+holdtime: 5000         # Time in milliseconds to show each individual picture
 
 picture-directories:    # folder locations to search for pictures
   - ./pics/01

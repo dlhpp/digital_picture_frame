@@ -20,12 +20,17 @@ func ShuffleImages(store *ImageStore) {
 
 func GetImageStore(yamlConfig *map[string]any) *ImageStore {
 	// Initialize image store
-	// dataDir := yaml.GetString(yamlConfig, "picture-directories.0", "--not-found--") // "./data" // Change to your data directory path
-	dataDir := yaml.GetStringArray(yamlConfig, "picture-directories", []string{"--not-found--"}) // "./data" // Change to your data directory path
+	// dataDir := yaml.GetString(yamlConfig, "picture-directories.0", "--not-found--")
+	dataDir := yaml.GetStringArray(yamlConfig, "picture-directories", []string{"--not-found--"})
+	title := yaml.GetString(yamlConfig, "title", "DLH Slideshow") // time in seconds to transition from one pic to the next
+	fadetime := yaml.GetInt(yamlConfig, "fadetime", 3)            // time in seconds to transition from one pic to the next
+	holdtime := yaml.GetInt(yamlConfig, "holdtime", 20000)        // time in milliseconds to display one pic
+	randomize := (yaml.Get(yamlConfig, "random", true)).(bool)
+	logging.Log("GetImageStore", 5, fmt.Sprintf("randomize=%t, fadetime=%d, holdtime=%d, len(dataDir)=%d, title=%s", randomize, fadetime, holdtime, len(dataDir), title))
+
 	var imageStore []string
 
 	for idx, folder := range dataDir {
-
 		logging.Log("GetImageStore", 5, fmt.Sprintf("folder[%02d] = %s", idx, folder))
 		err := scanImages(folder, &imageStore)
 		if err != nil {
@@ -35,10 +40,7 @@ func GetImageStore(yamlConfig *map[string]any) *ImageStore {
 
 	logging.Log("GetImageStore", 5, fmt.Sprintf("len(imageStore) = %d", len(imageStore)))
 
-	store := &ImageStore{Images: imageStore, ImageSubscript: 0}
-
-	randomize := (yaml.Get(yamlConfig, "random", true)).(bool)
-	logging.Log("GetImageStore", 5, fmt.Sprintf("randomize = %t", randomize))
+	store := &ImageStore{Images: imageStore, ImageSubscript: 0, Fadetime: fadetime, Holdtime: holdtime, Title: title}
 
 	if randomize {
 		ShuffleImages(store)

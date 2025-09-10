@@ -21,7 +21,7 @@
             height: 100%;
             object-fit: contain;
             opacity: 0;
-            transition: opacity 3s ease-in-out;
+            transition: opacity {{.Fadetime}}s ease-in-out;
         }
         .visible {
             opacity: 1;
@@ -35,7 +35,7 @@
     </div>
 
     <script>
-        const HOLD_TIME = 5000; // 5 seconds
+        const HOLD_TIME = {{.Holdtime}}; // 5 seconds
         const img1 = document.getElementById('img1');
         const img2 = document.getElementById('img2');
         let currentImg = img1;
