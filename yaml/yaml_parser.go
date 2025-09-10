@@ -189,7 +189,7 @@ func OpenYamlFile(filePath string) *map[string]any {
 		panic(fmt.Errorf("OpenYamlFile: error unmarshaling YAML: %w", err))
 	}
 
-	logging.Log("OpenYamlFile", 3, utils.DescribeVariable("cfg", cfg))
+	logging.Log("OpenYamlFile", 2, utils.DescribeVariable("cfg", cfg))
 
 	return &cfg
 }

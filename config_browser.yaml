@@ -5,9 +5,9 @@ windows:
       - /c
       - start
       - chrome  
-      - --new-window
-      - --full-screen      
-      # - --kiosk           # Chrome supports kiosk mode
+      # - --start-fullscreen  # full screen only works if there are no chrome instances running       
+      # - --new-window
+      # - --kiosk             # Chrome supports kiosk mode
   firefox: 
     executable: cmd
     args:       
@@ -15,29 +15,29 @@ windows:
       - start
       - firefox
       - --new-window
-      - --full-screen       # Firefox uses --full-screen
+      # - -kiosk
 linux: 
   chromium: 
     executable: chromium-browser
     args:       
       - --new-window
-      - --full-screen       # Chromium supports kiosk mode
+      - --start-fullscreen    # Chromium supports kiosk mode
       # - --kiosk
   firefox: 
     executable: firefox
     args:       
       - --new-window
-      - --full-screen       # Firefox uses --full-screen
+      - -kiosk        
   epiphany: 
     executable: epiphany
     args:       
       - --new-window
-      - --fullscreen        # Epiphany uses --fullscreen
+      - --fullscreen          # Epiphany uses --fullscreen
   midori: 
     executable: midori
     args:       
-      - --fullscreen        # Midori uses --fullscreen
-darwin: 
+      - --fullscreen          # Midori uses --fullscreen
+darwin:                       # None of this apple stuff has been tested - I don't have an apple machine.
   firefox: 
     executable: firefox
     args:       
@@ -47,7 +47,7 @@ darwin:
     executable: open
     args:       
       - -a
-      - Safari              # Use 'open' for Safari
+      - Safari                # Use 'open' for Safari
     MacScript: |
       tell application Safari
           activate

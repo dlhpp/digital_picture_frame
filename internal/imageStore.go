@@ -18,7 +18,7 @@ func ShuffleImages(store *ImageStore) {
 	})
 }
 
-func GetImageStore(yamlConfig *map[string]any, flags *FlagSettings) *ImageStore {
+func GetImageStore(yamlConfig *map[string]any) *ImageStore {
 	// Initialize image store
 	// dataDir := yaml.GetString(yamlConfig, "picture-directories.0", "--not-found--") // "./data" // Change to your data directory path
 	dataDir := yaml.GetStringArray(yamlConfig, "picture-directories", []string{"--not-found--"}) // "./data" // Change to your data directory path
@@ -33,14 +33,14 @@ func GetImageStore(yamlConfig *map[string]any, flags *FlagSettings) *ImageStore 
 		}
 	}
 
-	// slog.Info("getImageStore:", "len(images)", len(images))
 	logging.Log("GetImageStore", 5, fmt.Sprintf("len(imageStore) = %d", len(imageStore)))
 
-	// DLH:  We never said "new ImageStore" - we just created a pointer to an ImageStore struct.
-	// DLH:  I just realized, we're actually creating the ImageStore struct here with the curly braces.
 	store := &ImageStore{Images: imageStore, ImageSubscript: 0}
 
-	if flags.Random {
+	randomize := (yaml.Get(yamlConfig, "random", true)).(bool)
+	logging.Log("GetImageStore", 5, fmt.Sprintf("randomize = %t", randomize))
+
+	if randomize {
 		ShuffleImages(store)
 		logging.Log("GetImageStore", 5, "Shuffled images for random display.")
 	}
@@ -56,7 +56,7 @@ func scanImages(dataDir string, imageStore *[]string) error {
 			return err
 		}
 		if !info.IsDir() {
-			logging.Log("scanImages", 5, fmt.Sprintf("dataDir = %s, path = %s", dataDir, path))
+			logging.Log("scanImages", 1, fmt.Sprintf("dataDir = %s, path = %s", dataDir, path))
 			// Check for common image extensions
 			ext := strings.ToLower(filepath.Ext(path))
 			if ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" {

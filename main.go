@@ -10,27 +10,19 @@ import (
 
 func main() {
 
-	logging.SetLevel(3) // set to 1 for verbose, 5 for normal, 9 for very quiet
-
-	commandLineFlags := internal.GetCommandLineArgs()
-
 	yamlConfig := yaml.OpenYamlFile("config.yaml")
 
-	store := internal.GetImageStore(yamlConfig, commandLineFlags)
+	logging.SetLevel(yaml.GetInt(yamlConfig, "loglevel", 5)) // set to 1 for verbose, 5 for normal, 9 for very quiet
+
+	store := internal.GetImageStore(yamlConfig)
 
 	internal.SetupHttpHandlers(store)
 
-	logging.Log("main: launch set to: ", 5, commandLineFlags.Launch)
-	if commandLineFlags.Launch {
-		// internal.LaunchDefaultBrowser(yamlConfig)
-		// internal.LaunchBrowser(yamlConfig)
-		// internal.LaunchBrowser02(yamlConfig)
-		// internal.LaunchBrowser03(yamlConfig)
-	}
+	internal.LaunchBrowser(yamlConfig)
 
-	url := yaml.GetString(yamlConfig, "url", "localhost:81")
-	logging.Log("main: listening:", 5, "url", url)
-	if err := http.ListenAndServe(url, nil); err != nil {
+	host := yaml.GetString(yamlConfig, "host", "localhost:81")
+	logging.Log("main: listening:", 5, "host", host)
+	if err := http.ListenAndServe(host, nil); err != nil {
 		panic("main: Server failed to start: " + err.Error())
 	}
 }

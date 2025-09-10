@@ -1,11 +1,15 @@
 
-url: localhost:81       # hose:port
+loglevel: 5             # 1 => most verbose, 9 => fatal errors only
 
-random: false           # set to tru to show pictures in random order
+host: localhost:81      # host:port
+
+browser: firefox         # Required when launch=true.  Options: default, chrome, firefox, epiphany, midori, safari.
+
+launch: false            # Automatically launch browser.  If false then manually open browser to http://localhost:81"
+
+random: true            # Randomize the order of images.
 
 picture-directories:    # folder locations to search for pictures
   - ./pics/01
   - ./pics/02
-  # - C:\dlh\images\beauty\Sydney_Sweeney
-  # - C:\common\pics
 

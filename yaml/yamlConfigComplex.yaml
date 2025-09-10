@@ -27,4 +27,4 @@ multiple_types:
 deeply:
   nested:
     structure:
-      key: Some sort of string in this deeply nested structure      
+      key: Some nested string

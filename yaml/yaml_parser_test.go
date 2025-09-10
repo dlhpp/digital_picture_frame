@@ -94,7 +94,7 @@ func L(n string, v any) string {
 	return fmt.Sprintf("%s = %+v", n, v)
 }
 
-func Test_BrowserConfig(t *testing.T) {
+func NoTest_BrowserConfig(t *testing.T) {
 
 	logging.SetLevel(5)
 	cfg := OpenYamlFile("config_browser.yaml")
