@@ -19,6 +19,7 @@ func ShuffleImages(store *ImageStore) {
 }
 
 func GetImageStore(yamlConfig *map[string]any) *ImageStore {
+	logging.Log("GetImageStore", 5, "entering")
 	// Initialize image store
 	// dataDir := yaml.GetString(yamlConfig, "picture-directories.0", "--not-found--")
 	dataDir := yaml.GetStringArray(yamlConfig, "picture-directories", []string{"--not-found--"})

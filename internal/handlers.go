@@ -7,23 +7,23 @@ import (
 	"github.com/dlhpp/digital_picture_frame/logging"
 )
 
+var tmpl *template.Template
+
 func SetupHttpHandlers(store *ImageStore) {
 	// Set up HTTP handlers
-	logging.Log("SetupHttpHandlers", 5, "Setting up HTTP handlers")
-	http.HandleFunc("/", store.indexHandler)         // TODO: DLH - I do not really understand how this works.
-	http.HandleFunc("/next", store.nextImageHandler) // TODO: This seems identical to object oriented - these are methods on the store object/data.
+	logging.Log("SetupHttpHandlers", 5, "entering")
+
+	tmpl = getTemplate()
+
+	// These register the functions, they DO NOT call the functions.
+	http.HandleFunc("/", store.indexHandler)
+	http.HandleFunc("/next", store.nextImageHandler)
 }
 
 // indexHandler serves the HTML template
 func (store *ImageStore) indexHandler(w http.ResponseWriter, r *http.Request) {
-	// Load and parse the template file
 
 	logging.Log("indexHandler", 5, "entering - will return main parent HTML page")
-	tmpl, err := template.ParseFiles("templates/index.html")
-	if err != nil {
-		http.Error(w, "Error loading template", http.StatusInternalServerError)
-		return
-	}
 
 	// Data for template (optional substitutions)
 	data := struct {
@@ -38,7 +38,9 @@ func (store *ImageStore) indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Execute template
 	if err := tmpl.Execute(w, data); err != nil {
+		logging.Log("indexHandler", 9, "error executing main html index template: "+err.Error())
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		return
 	}
 }
 

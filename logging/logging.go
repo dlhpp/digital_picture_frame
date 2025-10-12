@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-var GlobalLevel int = 5 // 1 ==> most verbose, 9 ==> least verbose
+var GlobalLevel int = 5 // 1 ==> most verbose, 9 ==> fatal errors
 
 // TODO: refactor to return the formatted msg to enable easy testing.
 func Log(method string, level int, args ...any) {
