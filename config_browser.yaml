@@ -15,7 +15,7 @@ windows:
       - start
       - firefox
       - --new-window
-      # - -kiosk
+      # - --kiosk
 linux: 
   chromium: 
     executable: chromium-browser

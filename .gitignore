@@ -15,6 +15,11 @@ exe.*
 
 # Test binary, built with `go test -c`
 *.test
+html/*.jpg
+html/*.jpeg
+html/*.png
+html/*.gif
+html/*.svg
 
 # Output of the go coverage tool
 *.out

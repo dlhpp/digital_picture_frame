@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    /* overflow: hidden;  */
+
+    /* background-color: lightblue; */
+    /* background-color: #ec2ef6; */
+    /* background-color: #E5E5E5; */
+    /* background-color: #E5E5E5; */
+    /* background-color: #E5E5E5; */
+    /* background-color: red; */
+    /* background-color: GRAY; */
+    background-color: #94f7f7;
+
+    
+    /* GRADIENT */
+    /* Ensures the gradient covers the full viewport height */
+    min-height: 100vh; 
+    /* Blue to cyan, center outwards */
+    /* background-image: radial-gradient(circle at center, #484b4e, #94f7f7); */
+
+}    
+
+#container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
+}
+
+.image {
+
+    /* Border is around the entire space reserved for the pic */
+    /* which is currently 96% of the available screen.  */
+    /* border: 10px solid blue; */
+    /* border: 1px solid gray; */
+
+    position: absolute;
+    top: 1.8%;
+    left: 1.8%;
+    width: 96%;
+    height: 96%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.visible {
+    opacity: 1;
+}
