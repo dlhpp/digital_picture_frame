@@ -15,9 +15,13 @@ fadetime: 3             # Time in seconds to transition from one picture to the 
 
 holdtime: 5000         # Time in milliseconds to show each individual picture
 
-picture-directories:    # folder locations to search for pictures
+picture-directories:    # folder locations to search for pictures.  Use either relative or absolute paths. 
   # - ./pics/01
-  # - ./pics/02
-  # - C:\dlh\images\beauty\Sydney_Sweeney
-  - C:\dlh\images\beauty
+  - ./pics/02
+  # - ./pics/03
+  # - C:\dlh\code\go\digital_picture_frame\pics\01
+  # - C:\dlh\code\go\digital_picture_frame\pics\02
+  # - C:\dlh\images\HumorousPictures
+  # - C:\dlh\images\nostalgic
+  # - C:\dlh\images\quotes_and_advice
 
