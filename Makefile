@@ -7,6 +7,8 @@
 # 
 # This would probably work on the raspberry pi
 # but it would take too long to compile on the pi.
+#
+# Use this instead:   ./build_simple_bash_script.sh
 # ====================================================
 
 BINARY_NAME=myapp

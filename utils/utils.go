@@ -7,6 +7,20 @@ import (
 	"github.com/dlhpp/digital_picture_frame/logging"
 )
 
+func ToString(i any) string {
+	if i == nil {
+		return "nil"
+	}
+	return fmt.Sprintf("%+v", i)
+}
+
+func Tern(condition bool, trueValue any, falseValue any) string {
+	if condition {
+		return ToString(trueValue)
+	}
+	return ToString(falseValue)
+}
+
 func DescribeVariable(name string, i any) string {
 	if i == nil {
 		return "nil"

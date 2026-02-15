@@ -6,6 +6,7 @@ import (
 	"runtime"
 
 	"github.com/dlhpp/digital_picture_frame/logging"
+	"github.com/dlhpp/digital_picture_frame/utils"
 	"github.com/dlhpp/digital_picture_frame/yaml"
 
 	"github.com/pkg/browser"
@@ -35,7 +36,8 @@ func LaunchBrowser(yamlConfig *map[string]any) error {
 		logging.Log("LaunchBrowser", 5, fmt.Sprintf("cmd=%s, args=%+v", cmd, args))
 
 		err := exec.Command(cmd, args...).Start()
-		logging.Log("LaunchBrowser", 5, fmt.Sprintf("err(2) = %+v", err))
+		errMsg := utils.Tern(err == nil, "Browser launched successfully", fmt.Sprintf("Error launching browser: %+v", err))
+		logging.Log("LaunchBrowser", 5, fmt.Sprintf("%+v", errMsg))
 		return err
 	}
 }

@@ -17,6 +17,7 @@ holdtime: 5000         # Time in milliseconds to show each individual picture
 
 picture-directories:    # folder locations to search for pictures
   # - ./pics/01
-  - ./pics/02
+  # - ./pics/02
   # - C:\dlh\images\beauty\Sydney_Sweeney
+  - C:\dlh\images\beauty
 
