@@ -9,7 +9,7 @@ import (
 
 func getTemplate() *template.Template {
 	logging.Log("getTemplate", 5, "entering")
-	tmpl, err := template.ParseFiles("index.html")
+	tmpl, err := template.ParseFiles("static/html/index.html")
 	if err != nil {
 		logging.Log("getTemplate", 9, "error getting template: "+err.Error())
 		os.Exit(1)

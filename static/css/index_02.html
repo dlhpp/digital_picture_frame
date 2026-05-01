@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test CSS</title>
+    <!-- <link rel="stylesheet" href="css_00_original.css"> -->
+    <!-- <link rel="stylesheet" href="css_01.css">  -->   
+    <link rel="stylesheet" href="css_02.css">
+</head>
+<body>
+    <div id="container">
+        <img id="img1" class="image visible" src="">
+        <img id="img2" class="image" src="">
+    </div>
+
+    <script>
+        let iter = 0;
+        let imgUrls = ['Computer_Crazy_2.gif', 'sydney_vert.png', 'IMG_1521.JPG', '1hour_kor_03.png', 'IMG_1524.JPG'];
+
+        const HOLD_TIME = 2000; // in milliseconds
+        const img1 = document.getElementById('img1');
+        const img2 = document.getElementById('img2');
+        let currentImg = img1;
+        let nextImg = img2;
+
+        function getNextImageUrl() {
+            let sub = imgUrls[iter % imgUrls.length];
+            iter++; 
+            return sub;
+        }
+
+        function swapImages() {
+            // Request next image
+            nextImg.src = getNextImageUrl();
+
+            // Wait for the new image to load
+            nextImg.onload = () => {
+                // Fade in next image
+                nextImg.classList.add('visible');
+                currentImg.classList.remove('visible');
+
+                // Swap references
+                const temp = currentImg;
+                currentImg = nextImg;
+                nextImg = temp;
+
+                // Schedule next swap
+                setTimeout(swapImages, HOLD_TIME); // 10 seconds
+            };
+        }
+
+        // Start the cycle
+        img1.src = getNextImageUrl();
+        img1.onload = () => {
+            setTimeout(swapImages, HOLD_TIME); // Start after first image loads
+        };
+    </script>
+</body>
+</html>

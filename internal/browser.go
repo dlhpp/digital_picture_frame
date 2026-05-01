@@ -29,7 +29,7 @@ func LaunchBrowser(yamlConfig *map[string]any) error {
 		osType := runtime.GOOS
 		logging.Log("LaunchBrowser", 5, fmt.Sprintf("osType = %s, browser = %s", osType, browser))
 
-		browserConfig := yaml.OpenYamlFile("config_browser.yaml")
+		browserConfig := yaml.OpenYamlFile("static/config/config_browser.yaml")
 		cmd := yaml.GetString(browserConfig, fmt.Sprintf("%s.%s.executable", osType, browser), "")
 		args := yaml.GetStringArray(browserConfig, fmt.Sprintf("%s.%s.args", osType, browser), []string{})
 		args = append(args, url)
