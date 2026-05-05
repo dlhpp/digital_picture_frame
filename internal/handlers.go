@@ -33,7 +33,7 @@ func (store *ImageStore) rootHandler(w http.ResponseWriter, r *http.Request) {
 		store.indexHandler(w, r)
 
 	case path == "/next":
-		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, calling nextImageHandler", r.URL.Path))
+		logging.Log("rootHandler", 6, fmt.Sprintf("path = %s, calling nextImageHandler", r.URL.Path))
 		store.nextImageHandler(w, r)
 
 	case path == "/favicon.ico":

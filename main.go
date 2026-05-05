@@ -18,7 +18,7 @@ func main() {
 
 	internal.SetupHttpHandlers(store)
 
-	// internal.LaunchBrowser(yamlConfig)
+	internal.LaunchBrowser(yamlConfig)
 
 	host := yaml.GetString(yamlConfig, "host", "localhost:81")
 
