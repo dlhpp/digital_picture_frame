@@ -4,30 +4,50 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strings"
 
 	"github.com/dlhpp/digital_picture_frame/logging"
 )
 
 var tmpl *template.Template
 
-func createStaticHandle(url string, filePath string) {
-	logging.Log("createStaticHandle", 5, fmt.Sprintf("entering: url = %s, filePath = %s", url, filePath))
+// func createStaticHandle(url string, filePath string) {
+// 	logging.Log("createStaticHandle", 5, fmt.Sprintf("entering: url = %s, filePath = %s", url, filePath))
+// 	fileHandler := http.FileServer(http.Dir(filePath))
+// 	urlHandler := http.StripPrefix(url, fileHandler)
+// 	// Wrap the handler to access the request in order to get the url path.
+// 	wrappedHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		logging.Log("createStaticHandle", 5, fmt.Sprintf("RESULT: url path = %s, filePath = %s", r.URL.Path, filePath))
+// 		urlHandler.ServeHTTP(w, r) // Delegate to the original handler
+// 	})
+// 	http.Handle(url, wrappedHandler)
+// }
 
-	fileHandler := http.FileServer(http.Dir(filePath))
-	urlHandler := http.StripPrefix(url, fileHandler)
+func (store *ImageStore) rootHandler(w http.ResponseWriter, r *http.Request) {
 
-	// Wrap the handler to access the request in order to get the url path.
-	wrappedHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logging.Log("createStaticHandle", 5, fmt.Sprintf("RESULT: url path = %s, filePath = %s", r.URL.Path, filePath))
-		urlHandler.ServeHTTP(w, r) // Delegate to the original handler
-	})
+	path := r.URL.Path
 
-	http.Handle(url, wrappedHandler)
-}
+	switch {
+	case path == "/", path == "/index.html":
+		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, calling indexHandler", r.URL.Path))
+		store.indexHandler(w, r)
 
-func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	logging.Log("faviconHandler", 5, fmt.Sprintf("path = %s, will return static/icons/favicon_fandom.ico", r.URL.Path))
-	http.ServeFile(w, r, "static/icons/favicon_fandom.ico")
+	case path == "/next":
+		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, calling nextImageHandler", r.URL.Path))
+		store.nextImageHandler(w, r)
+
+	case path == "/favicon.ico":
+		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, returning favicon.ico", r.URL.Path))
+		http.ServeFile(w, r, "static/icons/favicon_fandom.ico")
+
+	case strings.HasPrefix(path, "/static/"):
+		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, returning favicon.ico", r.URL.Path))
+		http.ServeFile(w, r, strings.TrimPrefix(path, "/"))
+
+	default:
+		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, PATH NOT FOUND", r.URL.Path))
+		http.Error(w, "Not Found", http.StatusNotFound)
+	}
 }
 
 func SetupHttpHandlers(store *ImageStore) {
@@ -36,13 +56,14 @@ func SetupHttpHandlers(store *ImageStore) {
 
 	tmpl = getTemplate()
 
-	http.HandleFunc("/{$}", store.indexHandler)
+	// http.HandleFunc("/", store.indexHandler)
+	http.HandleFunc("/", store.rootHandler)
 
-	http.HandleFunc("/next", store.nextImageHandler)
+	// http.HandleFunc("/next", store.nextImageHandler)
 
-	http.HandleFunc("/favicon.ico", faviconHandler)
+	// http.HandleFunc("/favicon.ico", faviconHandler)
 
-	createStaticHandle("/static/", "static")
+	// createStaticHandle("/static/", "static")
 }
 
 // indexHandler serves the HTML template
