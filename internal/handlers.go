@@ -10,24 +10,24 @@ import (
 
 var tmpl *template.Template
 
-func createStaticHandle(url string, filePath string, useExactPath bool) {
+func createStaticHandle(url string, filePath string) {
 	logging.Log("createStaticHandle", 5, fmt.Sprintf("entering: url = %s, filePath = %s", url, filePath))
 
 	fileHandler := http.FileServer(http.Dir(filePath))
 	urlHandler := http.StripPrefix(url, fileHandler)
 
-	handler := urlHandler
-	if useExactPath {
-		handler = fileHandler
-	}
-
 	// Wrap the handler to access the request in order to get the url path.
 	wrappedHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logging.Log("createStaticHandle", 5, fmt.Sprintf("RESULT: useExactPath = %t, url path = %s, filePath = %s", useExactPath, r.URL.Path, filePath))
-		handler.ServeHTTP(w, r) // Delegate to the original handler
+		logging.Log("createStaticHandle", 5, fmt.Sprintf("RESULT: url path = %s, filePath = %s", r.URL.Path, filePath))
+		urlHandler.ServeHTTP(w, r) // Delegate to the original handler
 	})
 
 	http.Handle(url, wrappedHandler)
+}
+
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	logging.Log("faviconHandler", 5, fmt.Sprintf("path = %s, will return static/icons/favicon_fandom.ico", r.URL.Path))
+	http.ServeFile(w, r, "static/icons/favicon_fandom.ico")
 }
 
 func SetupHttpHandlers(store *ImageStore) {
@@ -36,19 +36,13 @@ func SetupHttpHandlers(store *ImageStore) {
 
 	tmpl = getTemplate()
 
-	http.HandleFunc("/", store.indexHandler)
+	http.HandleFunc("/{$}", store.indexHandler)
 
 	http.HandleFunc("/next", store.nextImageHandler)
 
-	createStaticHandle("/static/", "static", false)
+	http.HandleFunc("/favicon.ico", faviconHandler)
 
-	createStaticHandle("/favicon.ico", "./static/icons/favicon_fandom.ico", true)
-
-	// 2026/04/29 17:12:39 [05/05] SetupHttpHandlers: path = /favicon.ico, will return favicon_fandom.ico
-	// http.HandleFunc("/favicon.ico", func(response http.ResponseWriter, request *http.Request) {
-	// 	logging.Log("SetupHttpHandlers", 5, fmt.Sprintf("path = %s, will return favicon_fandom.ico", request.URL.Path))
-	// 	http.ServeFile(response, request, "favicon_fandom.ico")
-	// })
+	createStaticHandle("/static/", "static")
 }
 
 // indexHandler serves the HTML template
