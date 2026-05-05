@@ -40,7 +40,8 @@ func (store *ImageStore) rootHandler(w http.ResponseWriter, r *http.Request) {
 		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, returning favicon.ico", r.URL.Path))
 		http.ServeFile(w, r, "static/icons/favicon_fandom.ico")
 
-	case strings.HasPrefix(path, "/static/"):
+	case strings.HasPrefix(path, "/static/") && len(path) > len("/static/"):
+		// check len to prevent returning a directory listing if /static/ is requested without a file
 		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, returning favicon.ico", r.URL.Path))
 		http.ServeFile(w, r, strings.TrimPrefix(path, "/"))
 
