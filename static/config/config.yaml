@@ -5,7 +5,7 @@ host: localhost:81      # host:port.  Do not include "http://"
 
 browser: chrome         # Options: default, chrome, firefox, epiphany, midori, safari.  Required when launch=true.  
 
-launch: true            # Options:  true, false.  Automatically launch browser.  If false then manually open browser to http://localhost:81"
+launch: false            # Options:  true, false.  Automatically launch browser.  If false then manually open browser to http://localhost:81"
 
 title: DLH-02      # tile for the browser window
 
@@ -16,9 +16,10 @@ fadetime: 2             # Time in seconds to transition from one picture to the 
 holdtime: 3000         # Time in milliseconds to show each individual picture
 
 picture-directories:    # folder locations to search for pictures.  Use either relative or absolute paths. 
-  - ./pics/01
-  - ./pics/02
-  - ./pics/03
+  - ./pics
+  # - ./pics/01
+  # - ./pics/02
+  # - ./pics/03
   # - C:\dlh\code\go\digital_picture_frame\pics\01
   # - C:\dlh\code\go\digital_picture_frame\pics\02
 

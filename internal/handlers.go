@@ -32,6 +32,10 @@ func (store *ImageStore) rootHandler(w http.ResponseWriter, r *http.Request) {
 		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, calling indexHandler", r.URL.Path))
 		store.indexHandler(w, r)
 
+	case strings.HasPrefix(path, "/index"): // for convenient testing of different index files.
+		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, calling indexHandler", r.URL.Path))
+		store.indexHandler(w, r)
+
 	case path == "/next":
 		logging.Log("rootHandler", 6, fmt.Sprintf("path = %s, calling nextImageHandler", r.URL.Path))
 		store.nextImageHandler(w, r)
@@ -42,7 +46,7 @@ func (store *ImageStore) rootHandler(w http.ResponseWriter, r *http.Request) {
 
 	case strings.HasPrefix(path, "/static/") && len(path) > len("/static/"):
 		// check len to prevent returning a directory listing if /static/ is requested without a file
-		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, returning favicon.ico", r.URL.Path))
+		logging.Log("rootHandler", 5, fmt.Sprintf("path = %s, returning static file", r.URL.Path))
 		http.ServeFile(w, r, strings.TrimPrefix(path, "/"))
 
 	default:
